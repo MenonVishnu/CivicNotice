@@ -17,9 +17,28 @@ export default function NoticeGenerator() {
     date: "",
     location: "",
     audience: "",
-    notes: "",
-    promptTips: "",
+    category: "",
+    department: "",
+    contact_officer: "",
+    contact_number: "",
+    email: "",
+    additional_notes: "",
+    // promptTips: "",
   });
+
+  //   {
+  //     "title": "string",
+  //     "body": "string",
+  //     "date": "string",
+  //     "location": "string",
+  //     "audience": "string",
+  //     "category": "string",
+  //     "department": "string",
+  //     "contact_officer": "string",
+  //     "contact_number": "string",
+  //     "email": "string",
+  //     "additional_notes": "string"
+  //   }
 
   const [generatedNotice, setGeneratedNotice] = useState("");
 
@@ -38,35 +57,37 @@ export default function NoticeGenerator() {
       date: "",
       location: "",
       audience: "",
-      notes: "",
-      promptTips: "",
+      category: "Default",
+      department: "Default",
+      contact_officer: "Default",
+      contact_number: "01234",
+      email: "Default@gmail,com",
+      additional_notes: "",
+      //   promptTips: "",
     });
     setGeneratedNotice("");
   };
 
-  const handleGenerateNotice = () => {
-    const notice = `
-NOTICE
+  const handleGenerateNotice = async () => {
+    try {
+      console.log("Date: ", formData);
+      const jsonData = JSON.stringify(formData);
+      const response = await fetch(
+        "https://civicnotice.onrender.com/generate_notice",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonData,
+        }
+      );
 
-${formData.title ? `TITLE: ${formData.title}` : ""}
-
-${formData.body ? `${formData.body}` : ""}
-
-${formData.date ? `DATE: ${formData.date}` : ""}
-
-${formData.location ? `LOCATION: ${formData.location}` : ""}
-
-${formData.audience ? `AUDIENCE: ${formData.audience}` : ""}
-
-${formData.notes ? `ADDITIONAL NOTES: ${formData.notes}` : ""}
-
-${formData.promptTips ? `PROMPT TIPS: ${formData.promptTips}` : ""}
-
----
-Generated on: ${new Date().toLocaleDateString()}
-    `.trim();
-
-    setGeneratedNotice(notice);
+      const data = await response.json();
+      console.log("Response Data:", data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -166,8 +187,8 @@ Generated on: ${new Date().toLocaleDateString()}
                 Notes
               </label>
               <textarea
-                name="notes"
-                value={formData.notes}
+                name="additional_notes"
+                value={formData.additional_notes}
                 onChange={handleInputChange}
                 className="textarea"
                 placeholder="Additional notes or instructions"
@@ -175,7 +196,7 @@ Generated on: ${new Date().toLocaleDateString()}
               />
             </div>
 
-            <div className="input-group">
+            {/* <div className="input-group">
               <label className="label">
                 <Lightbulb size={16} className="label-icon" />
                 Prompt Tips
@@ -188,7 +209,7 @@ Generated on: ${new Date().toLocaleDateString()}
                 placeholder="Tips for improving the notice"
                 rows="3"
               />
-            </div>
+            </div> */}
 
             <div className="button-container">
               <button
@@ -244,3 +265,17 @@ Generated on: ${new Date().toLocaleDateString()}
     </div>
   );
 }
+
+// {
+//     "title": "title",
+//     "body": "body",
+//     "date": "01/01/1991",
+//     "location": "Kell",
+//     "audience": "Audience",
+//     "category": "Default",
+//     "department": "Default",
+//     "contact_officer": "Default",
+//     "contact_number": "01234",
+//     "email": "Default@gmail,com",
+//     "additional_notes": "Notes",
+// }
