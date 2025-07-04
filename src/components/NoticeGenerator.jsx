@@ -26,20 +26,6 @@ export default function NoticeGenerator() {
     // promptTips: "",
   });
 
-  //   {
-  //     "title": "string",
-  //     "body": "string",
-  //     "date": "string",
-  //     "location": "string",
-  //     "audience": "string",
-  //     "category": "string",
-  //     "department": "string",
-  //     "contact_officer": "string",
-  //     "contact_number": "string",
-  //     "email": "string",
-  //     "additional_notes": "string"
-  //   }
-
   const [generatedNotice, setGeneratedNotice] = useState("");
 
   const handleInputChange = (e) => {
@@ -57,11 +43,11 @@ export default function NoticeGenerator() {
       date: "",
       location: "",
       audience: "",
-      category: "Default",
-      department: "Default",
-      contact_officer: "Default",
-      contact_number: "01234",
-      email: "Default@gmail,com",
+      category: "",
+      department: "",
+      contact_officer: "",
+      contact_number: "",
+      email: "",
       additional_notes: "",
       //   promptTips: "",
     });
@@ -95,7 +81,7 @@ export default function NoticeGenerator() {
       <div className="main-card">
         <div className="header">
           <div className="header-title">
-            <FileText size={48} color="#667eea" />
+            <FileText size={48} color="#0d9488" />
             <h1 className="title">Notice Generator</h1>
           </div>
           <p className="subtitle">
@@ -137,33 +123,35 @@ export default function NoticeGenerator() {
               />
             </div>
 
-            <div className="input-group">
-              <label className="label">
-                <Calendar size={16} className="label-icon" />
-                Date
-              </label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                className="input"
-              />
-            </div>
+            <div className="input-container-group">
+              <div className="input-group">
+                <label className="label">
+                  <Calendar size={16} className="label-icon" />
+                  Date
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                  className="input"
+                />
+              </div>
 
-            <div className="input-group">
-              <label className="label">
-                <MapPin size={16} className="label-icon" />
-                Location
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                className="input"
-                placeholder="Enter location"
-              />
+              <div className="input-group">
+                <label className="label">
+                  <MapPin size={16} className="label-icon" />
+                  Location
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  className="input"
+                  placeholder="Enter location"
+                />
+              </div>
             </div>
 
             <div className="input-group">
@@ -179,6 +167,85 @@ export default function NoticeGenerator() {
                 className="input"
                 placeholder="Enter target audience"
               />
+            </div>
+
+            <div className="input-group">
+              <label className="label">
+                <FileText size={16} className="label-icon" />
+                Category
+              </label>
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="input"
+                placeholder="Enter category"
+              />
+            </div>
+
+            <div className="input-container-group">
+              <div className="input-group">
+                <label className="label">
+                  <FileText size={16} className="label-icon" />
+                  Department
+                </label>
+                <input
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className="input"
+                  placeholder="Enter department"
+                />
+              </div>
+
+              <div className="input-group">
+                <label className="label">
+                  <FileText size={16} className="label-icon" />
+                  Contact Officer
+                </label>
+                <input
+                  type="text"
+                  name="contact_officer"
+                  value={formData.contact_officer}
+                  onChange={handleInputChange}
+                  className="input"
+                  placeholder="Enter contact officer"
+                />
+              </div>
+            </div>
+
+            <div className="input-container-group">
+              <div className="input-group">
+                <label className="label">
+                  <FileText size={16} className="label-icon" />
+                  Contact Number
+                </label>
+                <input
+                  type="text"
+                  name="contact_number"
+                  value={formData.contact_number}
+                  onChange={handleInputChange}
+                  className="input"
+                  placeholder="Enter contact number"
+                />
+              </div>
+
+              <div className="input-group">
+                <label className="label">
+                  <FileText size={16} className="label-icon" />
+                  Email
+                </label>
+                <input
+                  type="text"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="input"
+                  placeholder="Enter email"
+                />
+              </div>
             </div>
 
             <div className="input-group">
