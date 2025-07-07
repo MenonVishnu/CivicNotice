@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import {
   FileText,
   RotateCcw,
@@ -12,22 +15,78 @@ import {
 import "./NoticeGenerator.css";
 
 export default function NoticeGenerator() {
+  //   const [formData, setFormData] = useState({
+  //     title: "",
+  //     body: "",
+  //     date: "",
+  //     location: "",
+  //     audience: "",
+  //     category: "",
+  //     department: "",
+  //     contact_officer: "",
+  //     contact_number: "",
+  //     email: "",
+  //     additional_notes: "",
+  //     // promptTips: '',
+  //   });
   const [formData, setFormData] = useState({
-    title: "",
-    body: "",
-    date: "",
-    location: "",
-    audience: "",
-    category: "",
-    department: "",
-    contact_officer: "",
-    contact_number: "",
-    email: "",
-    additional_notes: "",
-    // promptTips: "",
+    title: "Temporary Power Shortage Notice",
+    body: "Residents are hereby informed that due to an unexpected load management issue from the local power grid, our CHS will experience intermittent power supply on 28th June 2025. The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has assured us that normal supply will resume by evening.",
+    date: "28/06/2025",
+    location: "Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai",
+    audience: "All Residents of Sai Krupa CHS",
+    category: "Electricity Disruption",
+    department: "Building Maintenance Committee",
+    contact_officer: "Mr. Ramesh Patil (Secretary)",
+    contact_number: "9819456723",
+    email: "saikrupachs.vashi@gmail.com",
+    additional_notes:
+      "Residents are requested to conserve electricity and avoid using heavy appliances during peak hours. Generator backup will be available for elevators and essential services only.",
   });
 
   const [generatedNotice, setGeneratedNotice] = useState("");
+
+  //   `
+  // **Sai Krupa Cooperative Housing Society (Proposed)**
+  // **Building Maintenance Committee**
+  // **Sector 17, Vashi, Navi Mumbai – 400703**
+  // **(Registration Number: [Insert CHS Registration Number, if applicable])**
+
+  // **Ref No: SKCHS/BMC/2025/07/001**
+  // **Date: 10/07/2025**
+
+  // **PUBLIC NOTICE**
+  // **Temporary Power Disruption Notice**
+
+  // **To:** All Residents of Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai
+
+  // **Subject:** Temporary Interruption of Power Supply on 17/07/2025
+
+  // Dear Residents,
+  // This is to inform you that due to unforeseen load management issues in the local power grid, Sai Krupa CHS will experience temporary power disruptions on July 17, 2025.
+
+  // The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has informed us that normal power supply is expected to resume by the evening of the same day. We regret any inconvenience this may cause.
+
+  // **Advisory:**
+  // We kindly request all residents to conserve electricity and avoid using high-power appliances like air conditioners and geysers during peak hours.
+  // Generator backup will be available *only* for elevators and essential services.
+
+  // ...
+
+  // **साई कृपा सहकारी गृहनिर्माण संस्था (प्रस्तावित)**
+  // **इमारत देखभाल समिती**
+  // **सेक्टर 17, वाशी, नवी मुंबई – 400703**
+
+  // **संदर्भ क्रमांक: एसकेCHS/BMC/2025/07/001**
+  // **दिनांक: 10/07/2025**
+
+  // ...
+
+  // श्री. [सही करणाऱ्याचे पूर्ण नाव]
+  // (अधिकृत स्वाक्षरीकर्ता)
+  // इमारत देखभाल समिती
+  // साई कृपा CHS
+  // `
   const [generating, setGenerating] = useState(false);
 
   const handleInputChange = (e) => {
@@ -36,6 +95,10 @@ export default function NoticeGenerator() {
       ...prev,
       [name]: value,
     }));
+
+    if (value.trim() !== "") {
+      setInvalidFields((prev) => prev.filter((field) => field !== name));
+    }
   };
 
   const handleReset = () => {
@@ -51,13 +114,33 @@ export default function NoticeGenerator() {
       contact_number: "",
       email: "",
       additional_notes: "",
-      //   promptTips: "",
+      // promptTips: '',
     });
     setGenerating(false);
     setGeneratedNotice("");
   };
 
+  const [invalidFields, setInvalidFields] = useState([]);
+
+  const checkEmpty = () => {
+    const requiredFields = { ...formData };
+    delete requiredFields.additional_notes;
+
+    const emptyFields = Object.entries(requiredFields)
+      .filter(([key, value]) => value.trim() === "")
+      .map(([key]) => key);
+
+    setInvalidFields(emptyFields);
+
+    return emptyFields.length === 0;
+  };
+
   const handleGenerateNotice = async () => {
+    if (!checkEmpty()) {
+      //   alert("Enter All fields!");
+      return;
+    }
+
     try {
       setGenerating(true);
       console.log("Date: ", formData);
@@ -72,11 +155,15 @@ export default function NoticeGenerator() {
           body: jsonData,
         }
       );
-
       const data = await response.json();
       console.log("Response Data:", data);
-      setGeneratedNotice(data.message);
-      setGenerating(false);
+      if (response.ok) {
+        setGeneratedNotice(data.message);
+        setGenerating(false);
+      } else {
+        setGeneratedNotice(data.detail[0].msg);
+        setGenerating(false);
+      }
     } catch (error) {
       console.log(error);
       setGenerating(false);
@@ -89,7 +176,7 @@ export default function NoticeGenerator() {
         <div className="header">
           <div className="header-title">
             <FileText size={48} color="#0d9488" />
-            <h1 className="title">Notice Generator</h1>
+            <h1 className="title">Civic Notice</h1>
           </div>
           <p className="subtitle">
             Create professional notices quickly and easily
@@ -110,7 +197,9 @@ export default function NoticeGenerator() {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="input"
+                className={`input ${
+                  invalidFields.includes("title") ? "input-error" : ""
+                }`}
                 placeholder="Enter notice title"
               />
             </div>
@@ -124,7 +213,9 @@ export default function NoticeGenerator() {
                 name="body"
                 value={formData.body}
                 onChange={handleInputChange}
-                className="textarea"
+                className={`textarea ${
+                  invalidFields.includes("body") ? "input-error" : ""
+                }`}
                 placeholder="Enter notice body content"
                 rows="4"
               />
@@ -141,7 +232,9 @@ export default function NoticeGenerator() {
                   name="date"
                   value={formData.date}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("date") ? "input-error" : ""
+                  }`}
                 />
               </div>
 
@@ -155,7 +248,9 @@ export default function NoticeGenerator() {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("location") ? "input-error" : ""
+                  }`}
                   placeholder="Enter location"
                 />
               </div>
@@ -171,7 +266,9 @@ export default function NoticeGenerator() {
                 name="audience"
                 value={formData.audience}
                 onChange={handleInputChange}
-                className="input"
+                className={`input ${
+                  invalidFields.includes("audience") ? "input-error" : ""
+                }`}
                 placeholder="Enter target audience"
               />
             </div>
@@ -186,7 +283,9 @@ export default function NoticeGenerator() {
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="input"
+                className={`input ${
+                  invalidFields.includes("category") ? "input-error" : ""
+                }`}
                 placeholder="Enter category"
               />
             </div>
@@ -202,7 +301,9 @@ export default function NoticeGenerator() {
                   name="department"
                   value={formData.department}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("department") ? "input-error" : ""
+                  }`}
                   placeholder="Enter department"
                 />
               </div>
@@ -217,7 +318,11 @@ export default function NoticeGenerator() {
                   name="contact_officer"
                   value={formData.contact_officer}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("contact_officer")
+                      ? "input-error"
+                      : ""
+                  }`}
                   placeholder="Enter contact officer"
                 />
               </div>
@@ -234,7 +339,11 @@ export default function NoticeGenerator() {
                   name="contact_number"
                   value={formData.contact_number}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("contact_number")
+                      ? "input-error"
+                      : ""
+                  }`}
                   placeholder="Enter contact number"
                 />
               </div>
@@ -249,7 +358,9 @@ export default function NoticeGenerator() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="input"
+                  className={`input ${
+                    invalidFields.includes("email") ? "input-error" : ""
+                  }`}
                   placeholder="Enter email"
                 />
               </div>
@@ -264,7 +375,11 @@ export default function NoticeGenerator() {
                 name="additional_notes"
                 value={formData.additional_notes}
                 onChange={handleInputChange}
-                className="textarea"
+                className={`textarea ${
+                  invalidFields.includes("additional_notes")
+                    ? "input-error"
+                    : ""
+                }`}
                 placeholder="Additional notes or instructions"
                 rows="3"
               />
@@ -310,7 +425,12 @@ export default function NoticeGenerator() {
                   Loading
                 </div>
               ) : generatedNotice ? (
-                <div className="preview-content">{generatedNotice}</div>
+                <div className="preview-content">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {/* <div className="preview-content">{generatedNotice}</div> */}
+                    {generatedNotice}
+                  </ReactMarkdown>
+                </div>
               ) : (
                 <div className="empty-preview">
                   <div className="empty-preview-content">
