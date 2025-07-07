@@ -45,48 +45,6 @@ export default function NoticeGenerator() {
   });
 
   const [generatedNotice, setGeneratedNotice] = useState("");
-
-  //   `
-  // **Sai Krupa Cooperative Housing Society (Proposed)**
-  // **Building Maintenance Committee**
-  // **Sector 17, Vashi, Navi Mumbai – 400703**
-  // **(Registration Number: [Insert CHS Registration Number, if applicable])**
-
-  // **Ref No: SKCHS/BMC/2025/07/001**
-  // **Date: 10/07/2025**
-
-  // **PUBLIC NOTICE**
-  // **Temporary Power Disruption Notice**
-
-  // **To:** All Residents of Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai
-
-  // **Subject:** Temporary Interruption of Power Supply on 17/07/2025
-
-  // Dear Residents,
-  // This is to inform you that due to unforeseen load management issues in the local power grid, Sai Krupa CHS will experience temporary power disruptions on July 17, 2025.
-
-  // The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has informed us that normal power supply is expected to resume by the evening of the same day. We regret any inconvenience this may cause.
-
-  // **Advisory:**
-  // We kindly request all residents to conserve electricity and avoid using high-power appliances like air conditioners and geysers during peak hours.
-  // Generator backup will be available *only* for elevators and essential services.
-
-  // ...
-
-  // **साई कृपा सहकारी गृहनिर्माण संस्था (प्रस्तावित)**
-  // **इमारत देखभाल समिती**
-  // **सेक्टर 17, वाशी, नवी मुंबई – 400703**
-
-  // **संदर्भ क्रमांक: एसकेCHS/BMC/2025/07/001**
-  // **दिनांक: 10/07/2025**
-
-  // ...
-
-  // श्री. [सही करणाऱ्याचे पूर्ण नाव]
-  // (अधिकृत स्वाक्षरीकर्ता)
-  // इमारत देखभाल समिती
-  // साई कृपा CHS
-  // `
   const [generating, setGenerating] = useState(false);
 
   const handleInputChange = (e) => {
@@ -137,7 +95,6 @@ export default function NoticeGenerator() {
 
   const handleGenerateNotice = async () => {
     if (!checkEmpty()) {
-      //   alert("Enter All fields!");
       return;
     }
 
@@ -146,7 +103,7 @@ export default function NoticeGenerator() {
       console.log("Date: ", formData);
       const jsonData = JSON.stringify(formData);
       const response = await fetch(
-        "https://civicnotice.onrender.com/generate_notice",
+        "https://civicnotice.onrender.com/generate_notice/",
         {
           method: "POST",
           headers: {

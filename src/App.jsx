@@ -30,7 +30,7 @@ function App() {
         <NoticeGenerator />
       ) : (
         <div className="loading-preview">
-          <div className="loader"></div>Kindly Wait, While the Servers are being Started!
+          <div className="loader"></div>Booting up the servers... Almost there!
         </div>
       )}
     </>
