@@ -53,6 +53,7 @@ export default function NoticeGenerator() {
       additional_notes: "",
       //   promptTips: "",
     });
+    setGenerating(false);
     setGeneratedNotice("");
   };
 
