@@ -7,6 +7,7 @@ import {
   Users,
   StickyNote,
   Lightbulb,
+  Flashlight,
 } from "lucide-react";
 import "./NoticeGenerator.css";
 
@@ -27,6 +28,7 @@ export default function NoticeGenerator() {
   });
 
   const [generatedNotice, setGeneratedNotice] = useState("");
+  const [generating, setGenerating] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +58,7 @@ export default function NoticeGenerator() {
 
   const handleGenerateNotice = async () => {
     try {
+      setGenerating(true);
       console.log("Date: ", formData);
       const jsonData = JSON.stringify(formData);
       const response = await fetch(
@@ -71,8 +74,11 @@ export default function NoticeGenerator() {
 
       const data = await response.json();
       console.log("Response Data:", data);
+      setGeneratedNotice(data.message);
+      setGenerating(false);
     } catch (error) {
       console.log(error);
+      setGenerating(false);
     }
   };
 
@@ -297,7 +303,12 @@ export default function NoticeGenerator() {
             <h2 className="section-title">Generated Notice</h2>
 
             <div className="preview-container">
-              {generatedNotice ? (
+              {generating ? (
+                <div className="load">
+                  <div className="loader-inside"></div>
+                  Loading
+                </div>
+              ) : generatedNotice ? (
                 <div className="preview-content">{generatedNotice}</div>
               ) : (
                 <div className="empty-preview">
