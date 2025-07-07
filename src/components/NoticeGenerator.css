@@ -177,7 +177,7 @@
   margin-top: 25px;
   background-color: #f0fdfa;
   border-radius: 8px;
-  padding: 25px;
+  padding: 0px;
   min-height: 100vh;
   border: 1px solid #99f6e4;
 }
@@ -195,6 +195,11 @@
   word-wrap: break-word; /* <- for older browsers */
   word-break: break-word; /* <- for long emails or URLs */
 }
+
+/* .simple-mde {
+  padding: 0px;
+  margin: 0px;
+} */
 
 .load {
   display: flex;
@@ -242,6 +247,10 @@
   align-items: center;
 }
 
+.button-container {
+  display: flex;
+}
+
 .copy-button {
   width: 100%;
   padding: 15px 25px;
@@ -258,4 +267,10 @@
 
 .copy-button:hover {
   background-color: #15803d;
+}
+
+.hidden-preview {
+  max-height: 1px;
+  overflow: hidden;
+  opacity: 0;
 }

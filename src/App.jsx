@@ -22,7 +22,7 @@ function App() {
     };
 
     checkServerConnection();
-  }, []); // Add dependency array to run once on mount
+  }, []); 
 
   return (
     <>

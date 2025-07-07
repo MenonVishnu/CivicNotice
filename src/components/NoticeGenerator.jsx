@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { default as SimpleMDE } from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+import html2pdf from "html2pdf.js";
 
 import {
   FileText,
@@ -29,22 +32,9 @@ export default function NoticeGenerator() {
   //     additional_notes: "",
   //     // promptTips: '',
   //   });
-  const [formData, setFormData] = useState({
-    title: "Temporary Power Shortage Notice",
-    body: "Residents are hereby informed that due to an unexpected load management issue from the local power grid, our CHS will experience intermittent power supply on 28th June 2025. The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has assured us that normal supply will resume by evening.",
-    date: "28/06/2025",
-    location: "Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai",
-    audience: "All Residents of Sai Krupa CHS",
-    category: "Electricity Disruption",
-    department: "Building Maintenance Committee",
-    contact_officer: "Mr. Ramesh Patil (Secretary)",
-    contact_number: "9819456723",
-    email: "saikrupachs.vashi@gmail.com",
-    additional_notes:
-      "Residents are requested to conserve electricity and avoid using heavy appliances during peak hours. Generator backup will be available for elevators and essential services only.",
-  });
+  const [formData, setFormData] = useState(dummyData);
 
-  const [generatedNotice, setGeneratedNotice] = useState("");
+  const [generatedNotice, setGeneratedNotice] = useState(dummyNotice);
   const [generating, setGenerating] = useState(false);
 
   const handleInputChange = (e) => {
@@ -114,8 +104,10 @@ export default function NoticeGenerator() {
       );
       const data = await response.json();
       console.log("Response Data:", data);
+
       if (response.ok) {
-        setGeneratedNotice(data.message);
+        //   setGeneratedNotice(data.message);
+        setGeneratedNotice(data.message.trim().replace(/^```|```$/g, " "));
         setGenerating(false);
       } else {
         setGeneratedNotice(data.detail[0].msg);
@@ -125,6 +117,19 @@ export default function NoticeGenerator() {
       console.log(error);
       setGenerating(false);
     }
+  };
+
+  const previewRef = useRef(null);
+  const downloadAsPDF = () => {
+    const opt = {
+      margin: 0.5,
+      filename: "Notice.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf().set(opt).from(previewRef.current).save();
   };
 
   return (
@@ -383,10 +388,21 @@ export default function NoticeGenerator() {
                 </div>
               ) : generatedNotice ? (
                 <div className="preview-content">
+                  {/*                      
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {/* <div className="preview-content">{generatedNotice}</div> */}
+               
                     {generatedNotice}
-                  </ReactMarkdown>
+                  </ReactMarkdown> */}
+                  {/* <div className="preview-content">{generatedNotice}</div> */}
+
+                  <SimpleMDE
+                    value={generatedNotice}
+                    onChange={(value) => setGeneratedNotice(value)}
+                    className="simple-mde"
+                    options={{
+                      spellChecker: false,
+                    }}
+                  />
                 </div>
               ) : (
                 <div className="empty-preview">
@@ -408,13 +424,26 @@ export default function NoticeGenerator() {
             </div>
 
             {generatedNotice && (
-              <button
-                onClick={() => navigator.clipboard.writeText(generatedNotice)}
-                className="copy-button"
-              >
-                Copy to Clipboard
-              </button>
+              <div className="button-container">
+                <button
+                  onClick={() => navigator.clipboard.writeText(generatedNotice)}
+                  className="copy-button"
+                >
+                  Copy to Clipboard
+                </button>
+                <button onClick={downloadAsPDF} className="copy-button">
+                  Download as PDF
+                </button>
+              </div>
             )}
+          </div>
+        </div>
+        {/* for PDF Generation */}
+        <div className="final-preview">
+          <div ref={previewRef} className="hidden-preview">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {generatedNotice}
+            </ReactMarkdown>
           </div>
         </div>
       </div>
@@ -422,16 +451,88 @@ export default function NoticeGenerator() {
   );
 }
 
-// {
-//     "title": "title",
-//     "body": "body",
-//     "date": "01/01/1991",
-//     "location": "Kell",
-//     "audience": "Audience",
-//     "category": "Default",
-//     "department": "Default",
-//     "contact_officer": "Default",
-//     "contact_number": "01234",
-//     "email": "Default@gmail,com",
-//     "additional_notes": "Notes",
-// }
+const dummyData = {
+  title: "Temporary Power Shortage Notice",
+  body: "Residents are hereby informed that due to an unexpected load management issue from the local power grid, our CHS will experience intermittent power supply on 28th June 2025. The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has assured us that normal supply will resume by evening.",
+  date: "28/06/2025",
+  location: "Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai",
+  audience: "All Residents of Sai Krupa CHS",
+  category: "Electricity Disruption",
+  department: "Building Maintenance Committee",
+  contact_officer: "Mr. Ramesh Patil (Secretary)",
+  contact_number: "9819456723",
+  email: "saikrupachs.vashi@gmail.com",
+  additional_notes:
+    "Residents are requested to conserve electricity and avoid using heavy appliances during peak hours. Generator backup will be available for elevators and essential services only.",
+};
+
+const dummyNotice = `
+    **
+
+**SAI KRUPA CO-OPERATIVE HOUSING SOCIETY LTD.**
+Sector 17, Vashi, Navi Mumbai – 400703
+(Maharashtra, India)
+
+**PUBLIC NOTICE**
+
+**Ref. No.:** SKCHS/MAINT/2025/06/001
+**Date:** 28/06/2025
+
+**Subject: Intimation Regarding Temporary Power Supply Disruption**
+
+To: All Residents of Sai Krupa Co-operative Housing Society Ltd.
+
+This notice is to inform all esteemed residents of Sai Krupa Co-operative Housing Society Ltd. of an anticipated intermittent disruption in power supply scheduled for today, 28th June 2025. This disruption is a consequence of unforeseen load management challenges communicated by the Maharashtra State Electricity Distribution Company Limited (MSEDCL).
+
+MSEDCL has assured the Society that diligent efforts are underway to restore normal power supply by evening. We understand this may cause inconvenience, and we sincerely regret any disruption to your daily routine.
+
+Residents are kindly requested to exercise judicious use of electricity and refrain from operating high-consumption appliances during peak hours to mitigate the overall impact of the power disruption. Generator backup will be prioritized for elevators and essential services to ensure the continued well-being of all residents.
+
+**Grievance Redressal Mechanism:**
+
+In case of any grievances or concerns related to the power disruption, residents are requested to contact the Building Maintenance Committee through the provided channels. The Committee will address concerns promptly and efficiently.
+
+**Right to Information (RTI) Act, 2005:**
+
+As per the provisions of the Right to Information Act, 2005, residents can seek information pertaining to this notice. Please direct your inquiries to the Secretary of the Society for further details and clarifications.
+
+**Contact Information:**
+
+Mr. Ramesh Patil
+Secretary
+Building Maintenance Committee
+Contact Number: 9819456723
+Email: saikrupachs.vashi@gmail.com
+
+**By Order of the Managing Committee,**
+
+[Signature]
+
+Mr. Ramesh Patil
+Secretary
+Sai Krupa Co-operative Housing Society Ltd.
+Sector 17, Vashi, Navi Mumbai – 400703
+
+**Note:** We deeply appreciate your understanding and cooperation during this temporary inconvenience. The Managing Committee is committed to ensuring the comfort and safety of all residents.
+
+**Improvements Made and Justifications:**
+
+*   **Society Name:** Added "Co-operative" to the Society name in the salutation for formal accuracy.
+*   **Subject Line:** Changed to "Intimation Regarding Temporary Power Supply Disruption" for a more formal and informative tone.
+*   **Salutation:** Changed "To: All Residents of Sai Krupa CHS" to "To: All Residents of Sai Krupa Co-operative Housing Society Ltd." for formality. Added "esteemed" to residents to make tone more respectful
+*   **Language & Tone:** Refined language throughout to be more formal, respectful, and in line with official communication standards (e.g., "This is to inform" changed to "This notice is to inform"). Replaced "unexpected load management issues" with "unforeseen load management challenges" which sounds more formal.
+*   **MSEDCL Clarification**: Clarified that MSEDCL communicated these challenges.
+*   **Resident Request:** Changed "Residents are requested to conserve electricity and avoid using heavy appliances" to "Residents are kindly requested to exercise judicious use of electricity and refrain from operating high-consumption appliances" which is more formal.
+*   **Generator Backup Clarification:** Clarified that generator backup is being prioritized.
+*   **Added Grievance Redressal Mechanism:** Included a section explicitly mentioning the grievance redressal mechanism, enhancing transparency and resident support.
+*   **RTI Act Mention:** Explicitly mentioned "Right to Information Act, 2005" for clarity.
+*   **Authority Designation:** Changed "By Order," to "By Order of the Managing Committee," for more precise authority.
+*   **Signature Block:** Added "Managing Committee" to clarify the authority behind the notice.
+*   **Closing Note:** Enhanced the closing note to express appreciation and commitment to resident well-being.
+*   **Format Adherence:** Ensured correct date format (DD/MM/YYYY), inclusion of reference number, and proper letterhead format (simulated).
+*   **Cultural Sensitivity:** Maintained a culturally appropriate and respectful tone throughout the notice.
+*    **Removed repetition** Removed redundant "Note:" and re-worked it into the flow of the rest of the notice.
+
+This revised notice is now suitable for official publication.
+    
+    `;
