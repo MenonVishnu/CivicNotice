@@ -5,6 +5,8 @@ import { default as SimpleMDE } from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import html2pdf from "html2pdf.js";
 
+// import { useReactToPrint } from "react-to-print";
+
 import {
   FileText,
   RotateCcw,
@@ -122,7 +124,7 @@ export default function NoticeGenerator() {
   const previewRef = useRef(null);
   const downloadAsPDF = () => {
     const opt = {
-      margin: 0.5,
+      margin: 1,
       filename: "Notice.pdf",
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
@@ -132,9 +134,14 @@ export default function NoticeGenerator() {
     html2pdf().set(opt).from(previewRef.current).save();
   };
 
+  //   const downloadAsPDF = useReactToPrint({
+  //     content: () => previewRef.current,
+  //   });
+
   return (
     <div className="container">
       <div className="main-card">
+        a
         <div className="header">
           <div className="header-title">
             <FileText size={48} color="#0d9488" />
@@ -144,7 +151,6 @@ export default function NoticeGenerator() {
             Create professional notices quickly and easily
           </p>
         </div>
-
         <div className="grid-container">
           <div className="form-section">
             <h2 className="section-title">Notice Details</h2>
@@ -438,10 +444,19 @@ export default function NoticeGenerator() {
             )}
           </div>
         </div>
-        {/* for PDF Generation */}
-        <div className="final-preview">
-          <div ref={previewRef} className="hidden-preview">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {/* for PDF Generation offscreen-preview // final-preview */}
+        <div className="offscreen-preview">
+          <div
+            className="printable-content"
+            ref={previewRef}
+            style={{
+              alignItems: "center",
+            }}
+          >
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              //   className="printable-content"
+            >
               {generatedNotice}
             </ReactMarkdown>
           </div>
@@ -512,27 +527,5 @@ Mr. Ramesh Patil
 Secretary
 Sai Krupa Co-operative Housing Society Ltd.
 Sector 17, Vashi, Navi Mumbai – 400703
-
-**Note:** We deeply appreciate your understanding and cooperation during this temporary inconvenience. The Managing Committee is committed to ensuring the comfort and safety of all residents.
-
-**Improvements Made and Justifications:**
-
-*   **Society Name:** Added "Co-operative" to the Society name in the salutation for formal accuracy.
-*   **Subject Line:** Changed to "Intimation Regarding Temporary Power Supply Disruption" for a more formal and informative tone.
-*   **Salutation:** Changed "To: All Residents of Sai Krupa CHS" to "To: All Residents of Sai Krupa Co-operative Housing Society Ltd." for formality. Added "esteemed" to residents to make tone more respectful
-*   **Language & Tone:** Refined language throughout to be more formal, respectful, and in line with official communication standards (e.g., "This is to inform" changed to "This notice is to inform"). Replaced "unexpected load management issues" with "unforeseen load management challenges" which sounds more formal.
-*   **MSEDCL Clarification**: Clarified that MSEDCL communicated these challenges.
-*   **Resident Request:** Changed "Residents are requested to conserve electricity and avoid using heavy appliances" to "Residents are kindly requested to exercise judicious use of electricity and refrain from operating high-consumption appliances" which is more formal.
-*   **Generator Backup Clarification:** Clarified that generator backup is being prioritized.
-*   **Added Grievance Redressal Mechanism:** Included a section explicitly mentioning the grievance redressal mechanism, enhancing transparency and resident support.
-*   **RTI Act Mention:** Explicitly mentioned "Right to Information Act, 2005" for clarity.
-*   **Authority Designation:** Changed "By Order," to "By Order of the Managing Committee," for more precise authority.
-*   **Signature Block:** Added "Managing Committee" to clarify the authority behind the notice.
-*   **Closing Note:** Enhanced the closing note to express appreciation and commitment to resident well-being.
-*   **Format Adherence:** Ensured correct date format (DD/MM/YYYY), inclusion of reference number, and proper letterhead format (simulated).
-*   **Cultural Sensitivity:** Maintained a culturally appropriate and respectful tone throughout the notice.
-*    **Removed repetition** Removed redundant "Note:" and re-worked it into the flow of the rest of the notice.
-
-This revised notice is now suitable for official publication.
     
-    `;
+`;

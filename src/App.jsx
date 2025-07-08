@@ -22,7 +22,7 @@ function App() {
     };
 
     checkServerConnection();
-  }, []); 
+  }, []);
 
   return (
     <>
