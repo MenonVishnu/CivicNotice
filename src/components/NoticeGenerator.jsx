@@ -117,6 +117,7 @@ export default function NoticeGenerator() {
 		} catch (error) {
 			console.log(error);
 			setGenerating(false);
+			setGeneratedNotice("Error Fetching Data from Server");
 		}
 	};
 
@@ -384,7 +385,7 @@ export default function NoticeGenerator() {
 									Loading
 								</div>
 							) : generatedNotice ? (
-								<div className="preview-content" ref={previewRef}>
+								<div className="preview-content">
 									{/*                      
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
                
