@@ -19,23 +19,23 @@ import {
 import "./NoticeGenerator.css";
 
 export default function NoticeGenerator() {
-	//   const [formData, setFormData] = useState({
-	//     title: "",
-	//     body: "",
-	//     date: "",
-	//     location: "",
-	//     audience: "",
-	//     category: "",
-	//     department: "",
-	//     contact_officer: "",
-	//     contact_number: "",
-	//     email: "",
-	//     additional_notes: "",
-	//     // promptTips: '',
-	//   });
-	const [formData, setFormData] = useState(dummyData);
+	const [formData, setFormData] = useState({
+		title: "",
+		body: "",
+		date: "",
+		location: "",
+		audience: "",
+		category: "",
+		department: "",
+		contact_officer: "",
+		contact_number: "",
+		email: "",
+		additional_notes: "",
+		// promptTips: '',
+	});
+	// const [formData, setFormData] = useState(dummyData);
 
-	const [generatedNotice, setGeneratedNotice] = useState(dummyNotice);
+	const [generatedNotice, setGeneratedNotice] = useState();
 	const [generating, setGenerating] = useState(false);
 
 	const handleInputChange = (e) => {
