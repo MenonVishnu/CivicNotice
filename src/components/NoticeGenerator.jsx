@@ -5,7 +5,7 @@ import { default as SimpleMDE } from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import html2pdf from "html2pdf.js";
 
-// import { useReactToPrint } from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 
 import {
   FileText,
@@ -122,7 +122,8 @@ export default function NoticeGenerator() {
   };
 
   const previewRef = useRef(null);
-  const downloadAsPDF = () => {
+  //   const previewRef = useRef < HTMLCollection > null;
+  const downloadAsPDF1 = () => {
     const opt = {
       margin: 1,
       filename: "Notice.pdf",
@@ -134,14 +135,13 @@ export default function NoticeGenerator() {
     html2pdf().set(opt).from(previewRef.current).save();
   };
 
-  //   const downloadAsPDF = useReactToPrint({
-  //     content: () => previewRef.current,
-  //   });
+  const downloadAsPDF = useReactToPrint({
+    contentRef: () => previewRef.current.outerHTML,
+  });
 
   return (
     <div className="container">
       <div className="main-card">
-        a
         <div className="header">
           <div className="header-title">
             <FileText size={48} color="#0d9488" />
@@ -437,7 +437,13 @@ export default function NoticeGenerator() {
                 >
                   Copy to Clipboard
                 </button>
-                <button onClick={downloadAsPDF} className="copy-button">
+                <button
+                  onClick={() => {
+                    console.log(previewRef);
+                    downloadAsPDF();
+                  }}
+                  className="copy-button"
+                >
                   Download as PDF
                 </button>
               </div>
@@ -445,21 +451,16 @@ export default function NoticeGenerator() {
           </div>
         </div>
         {/* for PDF Generation offscreen-preview // final-preview */}
-        <div className="offscreen-preview">
-          <div
-            className="printable-content"
-            ref={previewRef}
+
+        <div ref={previewRef} className="offscreen-preview">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
             style={{
-              alignItems: "center",
+              backgroundColor: "black",
             }}
           >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              //   className="printable-content"
-            >
-              {generatedNotice}
-            </ReactMarkdown>
-          </div>
+            {generatedNotice}
+          </ReactMarkdown>
         </div>
       </div>
     </div>

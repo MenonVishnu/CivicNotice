@@ -269,12 +269,6 @@
   background-color: #15803d;
 }
 
-.hidden-preview {
-  max-height: 1px;
-  overflow: hidden;
-  opacity: 0;
-}
-
 .offscreen-preview {
   position: absolute;
   top: 0;
@@ -285,10 +279,11 @@
   background-color: white;
   color: black;
   z-index: -1;
+  visibility: visible;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @media print {
+    display: block;
+  }
 }
 
 @media print {
@@ -305,12 +300,9 @@
   @page {
     size: A4;
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .printable-content {
-    display: block;
+    display: block !important;
   }
 }
