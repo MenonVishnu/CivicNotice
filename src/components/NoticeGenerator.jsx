@@ -15,27 +15,34 @@ import {
   StickyNote,
   Lightbulb,
   Flashlight,
+  Languages,
+  ChartBarStacked,
+  Contact,
+  Hash,
+  Mail,
+  Info,
 } from "lucide-react";
 import "./NoticeGenerator.css";
 
 export default function NoticeGenerator() {
-  const [formData, setFormData] = useState({
-    title: "",
-    body: "",
-    date: "",
-    location: "",
-    audience: "",
-    category: "",
-    department: "",
-    contact_officer: "",
-    contact_number: "",
-    email: "",
-    additional_notes: "",
-    // promptTips: '',
-  });
+  //   const [formData, setFormData] = useState({
+  //     title: "",
+  //     body: "",
+  //     date: "",
+  //     location: "",
+  //     language: "",
+  //     audience: "",
+  //     category: "",
+  //     department: "",
+  //     contact_officer: "",
+  //     contact_number: "",
+  //     email: "",
+  //     additional_notes: "",
+  //     // promptTips: '',
+  //   });
   //debugging
-  //   const [formData, setFormData] = useState(dummyData);
-  const [generatedNotice, setGeneratedNotice] = useState();
+  const [formData, setFormData] = useState(dummyData);
+  const [generatedNotice, setGeneratedNotice] = useState(dummyNotice);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -55,6 +62,7 @@ export default function NoticeGenerator() {
       body: "",
       date: "",
       location: "",
+      language: "",
       audience: "",
       category: "",
       department: "",
@@ -198,7 +206,16 @@ export default function NoticeGenerator() {
               <label className="label">
                 <StickyNote size={16} className="label-icon" />
                 Body
+                <div className="info-icon-wrapper">
+                  <Info size={16} className="info-icon" />
+                  <span className="tooltip-text">
+                    Provide detailed and specific content you want to include in
+                    the notice. The more context you give, the better the AI can
+                    generate a professional and accurate notice.
+                  </span>
+                </div>
               </label>
+
               <textarea
                 name="body"
                 value={formData.body}
@@ -263,21 +280,47 @@ export default function NoticeGenerator() {
               />
             </div>
 
-            <div className="input-group">
-              <label className="label">
-                <FileText size={16} className="label-icon" />
-                Category
-              </label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                className={`input ${
-                  invalidFields.includes("category") ? "input-error" : ""
-                }`}
-                placeholder="Enter category"
-              />
+            <div className="input-container-group">
+              <div className="input-group">
+                <label className="label">
+                  <ChartBarStacked size={16} className="label-icon" />
+                  Category
+                </label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className={`input ${
+                    invalidFields.includes("category") ? "input-error" : ""
+                  }`}
+                  placeholder="Enter category"
+                />
+              </div>
+              <div className="input-group">
+                <label className="label">
+                  <Languages size={16} className="label-icon" />
+                  Language
+                </label>
+                <select
+                  name="language"
+                  value={formData.language}
+                  onChange={handleInputChange}
+                  className={`input ${
+                    invalidFields.includes("language") ? "input-error" : ""
+                  }`}
+                >
+                  {/* <option value="">Select Language</option> */}
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Marathi">Marathi</option>
+                  {/* <option value="Gujarati">Gujarati</option>
+                  <option value="Tamil">Tamil</option>
+                  <option value="Telugu">Telugu</option>
+                  <option value="Bengali">Bengali</option> */}
+                  {/* Add more languages as needed */}
+                </select>
+              </div>
             </div>
 
             <div className="input-container-group">
@@ -300,7 +343,7 @@ export default function NoticeGenerator() {
 
               <div className="input-group">
                 <label className="label">
-                  <FileText size={16} className="label-icon" />
+                  <Contact size={16} className="label-icon" />
                   Contact Officer
                 </label>
                 <input
@@ -321,7 +364,7 @@ export default function NoticeGenerator() {
             <div className="input-container-group">
               <div className="input-group">
                 <label className="label">
-                  <FileText size={16} className="label-icon" />
+                  <Hash size={16} className="label-icon" />
                   Contact Number
                 </label>
                 <input
@@ -340,7 +383,7 @@ export default function NoticeGenerator() {
 
               <div className="input-group">
                 <label className="label">
-                  <FileText size={16} className="label-icon" />
+                  <Mail size={16} className="label-icon" />
                   Email
                 </label>
                 <input
@@ -360,6 +403,14 @@ export default function NoticeGenerator() {
               <label className="label">
                 <StickyNote size={16} className="label-icon" />
                 Notes
+                <div className="info-icon-wrapper">
+                  <Info size={16} className="info-icon" />
+                  <span className="tooltip-text">
+                    Include any extra instructions, tone preferences, or
+                    background information. This helps the AI tailor the notice
+                    more precisely to your needs.
+                  </span>
+                </div>
               </label>
               <textarea
                 name="additional_notes"
@@ -487,6 +538,7 @@ const dummyData = {
   body: "Residents are hereby informed that due to an unexpected load management issue from the local power grid, our CHS will experience intermittent power supply on 28th June 2025. The Maharashtra State Electricity Distribution Company Limited (MSEDCL) has assured us that normal supply will resume by evening.",
   date: "28/06/2025",
   location: "Sai Krupa CHS, Sector 17, Vashi, Navi Mumbai",
+  language: "English",
   audience: "All Residents of Sai Krupa CHS",
   category: "Electricity Disruption",
   department: "Building Maintenance Committee",
